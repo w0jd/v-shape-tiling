@@ -32,6 +32,9 @@ class Polygon:
         self.point_List.append(point)
         if point2 != None:
             self.point_List.append(point2)
+        self.short = long * \
+            math.sin(self.alfa*0.5)/(math.sin(self.gamma/2) +
+                                     math.sin(self.beta-self.alfa*0.5))
 
         print(self.alfa)
         print(self.gamma)
@@ -96,21 +99,6 @@ class Polygon:
         # czwarta ściana
         self.point5 = self.nextPoint(
             self.point_List[2], self.point_List[3], 1, 2*math.pi-self.alfa)
-        # self.vetex34 = Point((self.point_List[2].point_x-self.point_List[3].point_x),
-        #  (self.point_List[2].point_y-self.point_List[3].point_y))
-        # self.point5 = Point(self.point_List[3].point_x+self.vetex34.point_x,
-        # self.point_List[3].point_y+self.vetex34.point_y)
-        # self.point5 = Point(((self.point5.point_x-self.point_List[3].point_x) *
-        #                      math.cos(-self.alfa)) -
-        #                     ((self.point5.point_y-self.point_List[3].point_y) *
-        #                      math.sin(-self.alfa))
-        #                     + self.point_List[3].point_x,
-        #                     (self.point5.point_x-self.point_List[3].point_x) *
-        #                     math.sin(-self.alfa) +
-        #                     (self.point5.point_y-self.point_List[3].point_y) *
-        #                     math.cos(-self.alfa)
-        #                     + self.point_List[3].point_y
-        #                     )
 
         self.point_List.append(self.point5)
         # piąta śicana
@@ -164,9 +152,9 @@ def main():
     # m = input("wybierz metodę A lub B")
     d = 20
     k = 2
-    n = 5
+    n = 4
     c = 1
-    i = 2
+    i = 4
     m = "B"
 
     p1 = Point(0, 0)
@@ -175,7 +163,7 @@ def main():
     pol.createPolygon(d, k, 1)
     polygonList.append(pol)
     gen = 1
-    genLimit = 2
+    genLimit = 3
     genlimitA = 1*((1-(3 ** genLimit))/(1-3))
     print(genlimitA)
     genlimitB = 1*(1-4 ** genLimit)/(1-4)
@@ -213,7 +201,7 @@ def main():
             if it == 2 and m == 'B':
                 gen += 1
 
-                dl = math.sqrt((point.point_x-polygon.point_List[it+1].point_x)**2+(
+                dlP = math.sqrt((point.point_x-polygon.point_List[it+1].point_x)**2+(
                     point.point_y-polygon.point_List[it+1].point_y)**2)
 
                 pol = Polygon(
@@ -222,14 +210,22 @@ def main():
                     Point((polygon.point_List[it+1].point_x),
                           (polygon.point_List[it+1].point_y)),
                     dl, 2, n, c, i, m)
+                dlD = pol.short
                 dl = polygon.short
+                vec = Point((dlD/dlP)*(pol.point_List[1].point_x-pol.point_List[0].point_x),
+                            (dlD/dlP)*(pol.point_List[1].point_y-pol.point_List[0].point_y))
+                pol.point_List[0].point_x = pol.point_List[0].point_x-vec.point_x
+                pol.point_List[1].point_x = pol.point_List[1].point_x-vec.point_x
+                pol.point_List[0].point_y = pol.point_List[0].point_y-vec.point_y
+                pol.point_List[1].point_y = pol.point_List[1].point_y-vec.point_y
+
                 pol.createPolygon(dl, 2, -1*sign)
                 # sign *= -1
                 polygonList.append(pol)
             if it == 4 and m == 'B':
                 gen += 1
 
-                dl = math.sqrt((point.point_x-polygon.point_List[it+1].point_x)**2+(
+                dlP = math.sqrt((point.point_x-polygon.point_List[it+1].point_x)**2+(
                     point.point_y-polygon.point_List[it+1].point_y)**2)
                 dl = polygon.short
 
@@ -239,6 +235,15 @@ def main():
                           (point.point_y)),
                     Point((polygon.point_List[it-1].point_x),
                           (polygon.point_List[it-1].point_y)), dl, 2, n, c, i, m)
+                dlD = pol.short
+                dl = polygon.short
+                vec = Point((dlD/dlP)*(pol.point_List[1].point_x-pol.point_List[0].point_x),
+                            (dlD/dlP)*(pol.point_List[1].point_y-pol.point_List[0].point_y))
+                pol.point_List[0].point_x = pol.point_List[0].point_x-vec.point_x
+                pol.point_List[1].point_x = pol.point_List[1].point_x-vec.point_x
+                pol.point_List[0].point_y = pol.point_List[0].point_y-vec.point_y
+                pol.point_List[1].point_y = pol.point_List[1].point_y-vec.point_y
+
                 dl = polygon.short
                 pol.createPolygon(dl, 2, 1*sign)
                 # sign *= -1
