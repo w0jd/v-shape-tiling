@@ -84,7 +84,7 @@ class Polygon:
 
         self.point4 = self.nextPoint(
             self.point_List[1], self.point_List[2], 1, self.gamma)
-        if self.point4.point_x < self.point_List[1].point_x and self.point4.point_y < self.point_List[1].point_y:
+        if self.point4.point_x < self.point_List[1].point_x and self.point4.point_y < self.point_List[1].point_y and type == "A":
             self.beta *= -1
             self.gamma *= -1
             self.point3 = self.nextPoint(
@@ -173,7 +173,8 @@ def main():
         if m == 'A':
             listN.append(1*((1-(3 ** a))/(1-3)))
         if m == 'B':
-            listN.append(1*(1-4 ** a)/(1-4))
+            # listN.append(1*(1-4 ** a)/(1-4))
+            print()
     for polygon in polygonList:
         it = 0
         if (gen % 3):
