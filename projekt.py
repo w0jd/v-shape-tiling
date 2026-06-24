@@ -14,7 +14,7 @@ class Polygon:
         self.level = 0
         self.clockWise = clockWise
         self.alfa = (2*math.pi)/int(n)
-
+        self.n = n
         if c >= n/2:
             c = round(n/2)-1
         self.beta = (i*math.pi)/n
@@ -35,9 +35,9 @@ class Polygon:
         self.point_List.append(point)
         if point2 != None:
             self.point_List.append(point2)
-        self.short = long * \
-            math.sin(self.alfa*0.5)/(math.sin(self.gamma/2) +
-                                     math.sin(self.beta-self.alfa*0.5))
+        # self.short = long * 1/(4*(math.cos(math.pi/n)**2))
+        self.short = math.sin(self.alfa*0.5)/(math.sin(self.gamma/2) +
+                                              math.sin(self.beta-self.alfa*0.5))
 
         print(self.alfa)
         print(self.gamma)
@@ -64,6 +64,8 @@ class Polygon:
         shorter = longer * \
             math.sin(self.alfa*0.5)/(math.sin(self.gamma/2) +
                                      math.sin(self.beta-self.alfa*0.5))
+        # self.short = longer * \
+        # (math.log10(2)/math.log10(4*(math.cos(math.pi/self.n)**2, 10)))
 
         if shorter > longer:
             shorter, longer = longer, shorter
@@ -153,7 +155,7 @@ def main():
     n = 5
     c = 1
     i = 4
-    m = "B"
+    m = "A"
 
     p1 = Point(0, 0)
     p2 = Point(0, float(d))
@@ -161,10 +163,10 @@ def main():
     pol.createPolygon(d, k, 1)
     polygonList.append(pol)
     gen = 1
-    genLimit = 2
+    genLimit = 3
     genlimitA = 1*((1-(3 ** genLimit))/(1-3))
     print(genlimitA)
-    genlimitB = 1*(1-4 ** genLimit)/(1-4)
+    genlimitB = 1*(1-(4 ** genLimit))/(1-4)
     listN = []
     sign = 1
     first, last = 1, 4
@@ -177,13 +179,11 @@ def main():
             print()
     for polygon in polygonList:
         it = 0
-        if (gen % 3):
-            sign *= 1
-        print(polygon)
+
         for point in polygon.point_List:
             if it == first:
                 print(f"{gen}\n")
-                # gen += 1
+                gen += 1
 
                 dl = (3/4) * math.sqrt((point.point_x-polygon.point_List[it+1].point_x)**2+(
                     point.point_y-polygon.point_List[it+1].point_y)**2)
@@ -237,6 +237,7 @@ def main():
                 dlP = math.sqrt((point.point_x-polygon.point_List[it+1].point_x)**2+(
                     point.point_y-polygon.point_List[it+1].point_y)**2)
                 if it == 2:
+
                     flag = True
                     pol = Polygon(
                         Point((point.point_x),
@@ -256,12 +257,12 @@ def main():
 
                 dlD = pol.short
                 dl = polygon.short
-                vec = Point((dlD/dlP)*(pol.point_List[1].point_x-pol.point_List[0].point_x),
-                            (dlD/dlP)*(pol.point_List[1].point_y-pol.point_List[0].point_y))
-                pol.point_List[0].point_x = pol.point_List[0].point_x-vec.point_x
-                pol.point_List[1].point_x = pol.point_List[1].point_x-vec.point_x
-                pol.point_List[0].point_y = pol.point_List[0].point_y-vec.point_y
-                pol.point_List[1].point_y = pol.point_List[1].point_y-vec.point_y
+                # vec = Point((dlD/dlP)*(pol.point_List[1].point_x-pol.point_List[0].point_x),
+                # (dlD/dlP)*(pol.point_List[1].point_y-pol.point_List[0].point_y))
+                # pol.point_List[0].point_x = pol.point_List[0].point_x-vec.point_x
+                # pol.point_List[1].point_x = pol.point_List[1].point_x-vec.point_x
+                # pol.point_List[0].point_y = pol.point_List[0].point_y-vec.point_y
+                # pol.point_List[1].point_y = pol.point_List[1].point_y-vec.point_y
                 if polygon.clockWise != pol.clockWise:
                     # sign *= -1
                     second, third = third, second
@@ -294,15 +295,15 @@ def main():
                         dl, 2, n, c, i, m,  flag)
                 dlD = pol.short
                 dl = polygon.short
-                vec = Point((dlD/dlP)*(pol.point_List[1].point_x-pol.point_List[0].point_x),
-                            (dlD/dlP)*(pol.point_List[1].point_y-pol.point_List[0].point_y))
-                pol.point_List[0].point_x = pol.point_List[0].point_x-vec.point_x
-                pol.point_List[1].point_x = pol.point_List[1].point_x-vec.point_x
-                pol.point_List[0].point_y = pol.point_List[0].point_y-vec.point_y
-                pol.point_List[1].point_y = pol.point_List[1].point_y-vec.point_y
-                if polygon.clockWise != pol.clockWise:
-                    # sign *= -1
-                    second, third = third, second
+                # vec = Point((dlD/dlP)*(pol.point_List[1].point_x-pol.point_List[0].point_x),
+                # (dlD/dlP)*(pol.point_List[1].point_y-pol.point_List[0].point_y))
+                # pol.point_List[0].point_x = pol.point_List[0].point_x-vec.point_x
+                # pol.point_List[1].point_x = pol.point_List[1].point_x-vec.point_x
+                # pol.point_List[0].point_y = pol.point_List[0].point_y-vec.point_y
+                # pol.point_List[1].point_y = pol.point_List[1].point_y-vec.point_y
+                # if polygon.clockWise != pol.clockWise:
+                # sign *= -1
+                second, third = third, second
                 dl = polygon.short
                 pol.createPolygon(dl, 2, -1*sign)
                 # sign *= -1
@@ -316,15 +317,23 @@ def main():
                 dl = (3/4)*math.sqrt((point.point_x-polygon.point_List[it+1].point_x)**2+(
                     point.point_y-polygon.point_List[it+1].point_y)**2)
                 dl = polygon.short
+                if polygon.clockWise:
+                    pol = Polygon(
+                        Point(polygon.point_List[it-1].point_x,
+                              polygon.point_List[it-1].point_y),
+                        Point(point.point_x, point.point_y), dl, 2, n, c, i, m, True)
+                else:
 
-                pol = Polygon(Point(point.point_x, point.point_y),
-                              Point(polygon.point_List[it+1].point_x, polygon.point_List[it+1].point_y), dl, 2, n, c, i, m, flag)
-                pol.createPolygon(dl, 2, -1)
-                # sign *= -1
+                    pol = Polygon(Point(point.point_x, point.point_y),
+                                  Point(polygon.point_List[it+1].point_x, polygon.point_List[it+1].point_y), dl, 2, n, c, i, m, False)
                 # if polygon.clockWise != pol.clockWise:
                 # sign *= -1
-                # first, last = last, first
+                pol.createPolygon(dl, 2, sign)
                 polygonList.append(pol)
+                # if polygon.clockWise != pol.clockWise:
+                # sign *= -1
+
+                # first, last = last, first
             it += 1
         # sign *= -1
         # if (gen) in listN and gen > 0:
